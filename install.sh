@@ -159,6 +159,6 @@ fi
 
     # Print a message to the user
     echo "Installation complete"
-fi
+
 #end of script
 
