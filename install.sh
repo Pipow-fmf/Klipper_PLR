@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# Récupérer l\'utilisateur qui exécute le script
 REAL_USER="$USER"
-
-# Initialisation de la variable OWNER
 OWNER=""
 
 # Get the path & user from env
@@ -42,12 +39,21 @@ fi
 
 # Copy the project files to the Klipper directory
 cp -f $PROJECT_DIR/plr.cfg $USER_HOME/printer_data/config/ && echo "plr.cfg copied successfully." || echo "Error copying plr.cfg."
+# Auto replace path
+sed -i -E "s|\{USER_HOME\}|$USER_HOME|i" $USER_HOME/printer_data/config/plr.cfg
+sed -i -E "s|\{PLR_DIR\}|$USER_HOME/printer_data/plr|i" $USER_HOME/printer_data/config/plr.cfg
+
 cp -f $PROJECT_DIR/gcode_shell_command.py $KLIPPER_DIR/klippy/extras/ && echo "gcode_shell_command.py copied successfully." || echo "Error copying gcode_shell_command.py."
+
 # Use rsync to copy, overwriting existing files and create the folder if it does not exist
-  
+rsync $PROJECT_DIR/plr.sh $USER_HOME/printer_data/plr/ && echo "plr.sh copied successfully." || echo "Error copying plr.sh."
+rsync $PROJECT_DIR/clear_plr.sh $USER_HOME/printer_data/plr/ && echo "clear_plr.sh copied successfully." || echo "Error copying clear_plr.sh."
+# Auto replace path
+sed -i -E "s|\{USER_HOME\}|$USER_HOME|i" $USER_HOME/printer_data/plr/plr.sh
+sed -i -E "s|\{USER_HOME\}|$USER_HOME|i" $USER_HOME/printer_data/plr/clear_plr.sh 
 # Make plr.sh & clear_plr.sh executable
-#chmod +x $USER_HOME/printer_data/plr/plr.sh && echo "plr.sh made executable." || echo "Error making plr.sh executable."
-#chmod +x $USER_HOME/printer_data/plr/clear_plr.sh && echo "clear_plr.sh made executable." || echo "Error making clear_plr.sh executable."
+chmod +x $USER_HOME/printer_data/plr/plr.sh && echo "plr.sh made executable." || echo "Error making plr.sh executable."
+chmod +x $USER_HOME/printer_data/plr/clear_plr.sh && echo "clear_plr.sh made executable." || echo "Error making clear_plr.sh executable."
 
 # Check if printer.cfg exists, create it if it doesn\'t
 if [ ! -f $USER_HOME/printer_data/config/printer.cfg ]; then
