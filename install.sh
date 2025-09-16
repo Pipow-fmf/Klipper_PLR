@@ -74,18 +74,18 @@ else
     mv "$temp_file" $USER_HOME/printer_data/config/printer.cfg
 
     # Check if the string was added successfully
-    if grep -q \'[include plr.cfg]\'' $USER_HOME/printer_data/config/printer.cfg; then
+    if grep -q '[include plr.cfg]' $USER_HOME/printer_data/config/printer.cfg; then
         echo "The string [include plr.cfg] was successfully added."
     else
         echo "Error: the string [include plr.cfg] was not added."
     fi
 fi
 
-  # Check if the variables.cfg file exists
-  if [ ! -f $USER_HOME/printer_data/config/variables.cfg ]; then
-    echo "The file $USER_HOME/printer_data/config/variables.cfg does not exist. Creating..."
-    # Attempt to create the variables.cfg file
-    touch $USER_HOME/printer_data/config/variables.cfg
+# Check if the variables.cfg file exists
+if [ ! -f $USER_HOME/printer_data/config/variables.cfg ]; then
+  echo "The file $USER_HOME/printer_data/config/variables.cfg does not exist. Creating..."
+  # Attempt to create the variables.cfg file
+  touch $USER_HOME/printer_data/config/variables.cfg
 
     # Check if the file was created successfully
     if [ -f $USER_HOME/printer_data/config/variables.cfg ]; then
