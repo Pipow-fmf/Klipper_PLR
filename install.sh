@@ -137,7 +137,7 @@ if [ ! -f $USER_HOME/printer_data/config/variables.cfg ]; then
 # plr-klipper update_manager entry
 [update_manager Klipper_PLR]
 type: git_repo
-path: $HOME/Klipper_PLR
+path: ~/Klipper_PLR
 origin: https://github.com/Pipow-fmf/Klipper_PLR.git
 primary_branch: main
 install_script: install.sh
