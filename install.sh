@@ -56,12 +56,12 @@ fi
 
 # Check if the file exists
 if [ ! -f $USER_HOME/printer_data/config/printer.cfg ]; then
-    echo "Error: $USER_HOME/printer_data/config/printer.cfg does not exist."
+  echo "Error: $USER_HOME/printer_data/config/printer.cfg does not exist."
 fi
 
 # Check if the string is already present in the file
-if grep -Fxq \'[include plr.cfg]\'' $USER_HOME/printer_data/config/printer.cfg; then
-    echo "The string [include plr.cfg] is already present in the file."
+if grep -Fxq '[include plr.cfg]' $USER_HOME/printer_data/config/printer.cfg; then
+   echo "The string [include plr.cfg] is already present in the file."
 else
     # Create a temporary file
     temp_file=$(mktemp)
