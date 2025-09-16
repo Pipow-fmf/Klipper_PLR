@@ -1,16 +1,16 @@
 #!/bin/bash
 
-# Récupérer l'utilisateur qui exécute le script
+# Récupérer l\'utilisateur qui exécute le script
 REAL_USER="$USER"
 
 # Initialisation de la variable OWNER
 OWNER=""
 
-# Récupérer le répertoire de l'utilisateur
+# Get the path & user from env
 if [ -n "$SUDO_USER" ]; then
     echo "shell script execute by with sudo :  user is $SUDO_USER"
     if [ "$SUDO_USER" = "runner" ]; then
-        # Définir USER_HOME spécifiquement pour 'runner' et définir OWNER à 'pi'
+        # Définir USER_HOME spécifiquement pour \'runner\' et définir OWNER à \'pi\'
         USER_HOME="/home/pi"
         OWNER="pi"
     else
@@ -24,7 +24,7 @@ else
 fi
 
 echo "Real user: $REAL_USER"
-echo "User's home directory: $USER_HOME"
+echo "User\'s home directory: $USER_HOME"
 echo "Owner for chown: $OWNER"
 
 # Define the Klipper directory using USER_HOME instead of HOME
@@ -35,61 +35,51 @@ echo "Klipper directory: $KLIPPER_DIR"
 PROJECT_DIR="$PWD"
 echo "Project directory: $PROJECT_DIR"
 
-# Define the cleanup function
-#function cleanup {
-#  
-#}
+# Create the variables.cfg file in the printer_data directory, if it doesn\'t exist
+if [ ! -f $USER_HOME/printer_data/config/variables.cfg ]; then
+  touch $USER_HOME/printer_data/config/variables.cfg && echo "variables.cfg created successfully." || echo "Error creating variables.cfg."
+fi
 
-# Check if the script was called with the "remove" argument
-if [ "$1" == "remove" ]; then
-  # Call the cleanup function
-  cleanup
-else
-  # Create the variables.cfg file in the printer_data directory, if it doesn't exist
-  if [ ! -f $USER_HOME/printer_data/config/variables.cfg ]; then
-    touch $USER_HOME/printer_data/config/variables.cfg && echo "variables.cfg created successfully." || echo "Error creating variables.cfg."
-  fi
-
-  # Copy the project files to the Klipper directory
-  cp -f $PROJECT_DIR/plr.cfg $USER_HOME/printer_data/config/ && echo "plr.cfg copied successfully." || echo "Error copying plr.cfg."
-  cp -f $PROJECT_DIR/gcode_shell_command.py $KLIPPER_DIR/klippy/extras/ && echo "gcode_shell_command.py copied successfully." || echo "Error copying gcode_shell_command.py."
-  # Use rsync to copy, overwriting existing files and create the folder if it does not exist
+# Copy the project files to the Klipper directory
+cp -f $PROJECT_DIR/plr.cfg $USER_HOME/printer_data/config/ && echo "plr.cfg copied successfully." || echo "Error copying plr.cfg."
+cp -f $PROJECT_DIR/gcode_shell_command.py $KLIPPER_DIR/klippy/extras/ && echo "gcode_shell_command.py copied successfully." || echo "Error copying gcode_shell_command.py."
+# Use rsync to copy, overwriting existing files and create the folder if it does not exist
   
-  # Make plr.sh & clear_plr.sh executable
-  #chmod +x $USER_HOME/printer_data/plr/plr.sh && echo "plr.sh made executable." || echo "Error making plr.sh executable."
-  #chmod +x $USER_HOME/printer_data/plr/clear_plr.sh && echo "clear_plr.sh made executable." || echo "Error making clear_plr.sh executable."
+# Make plr.sh & clear_plr.sh executable
+#chmod +x $USER_HOME/printer_data/plr/plr.sh && echo "plr.sh made executable." || echo "Error making plr.sh executable."
+#chmod +x $USER_HOME/printer_data/plr/clear_plr.sh && echo "clear_plr.sh made executable." || echo "Error making clear_plr.sh executable."
 
-  # Check if printer.cfg exists, create it if it doesn't
-  if [ ! -f $USER_HOME/printer_data/config/printer.cfg ]; then
-      touch $USER_HOME/printer_data/config/printer.cfg && echo "printer.cfg created successfully." || echo "Error creating printer.cfg."
-  fi
+# Check if printer.cfg exists, create it if it doesn\'t
+if [ ! -f $USER_HOME/printer_data/config/printer.cfg ]; then
+    touch $USER_HOME/printer_data/config/printer.cfg && echo "printer.cfg created successfully." || echo "Error creating printer.cfg."
+fi
 
-  # Check if the file exists
-  if [ ! -f $USER_HOME/printer_data/config/printer.cfg ]; then
+# Check if the file exists
+if [ ! -f $USER_HOME/printer_data/config/printer.cfg ]; then
     echo "Error: $USER_HOME/printer_data/config/printer.cfg does not exist."
-  fi
+fi
 
-  # Check if the string is already present in the file
-  if grep -Fxq '[include plr.cfg]' $USER_HOME/printer_data/config/printer.cfg; then
-      echo "The string [include plr.cfg] is already present in the file."
-  else
-      # Create a temporary file
-      temp_file=$(mktemp)
+# Check if the string is already present in the file
+if grep -Fxq \'[include plr.cfg]\'' $USER_HOME/printer_data/config/printer.cfg; then
+    echo "The string [include plr.cfg] is already present in the file."
+else
+    # Create a temporary file
+    temp_file=$(mktemp)
 
-      # Add the line [include plr.cfg] at the beginning of the file
-      echo "[include plr.cfg]" > "$temp_file"
-      cat $USER_HOME/printer_data/config/printer.cfg >> "$temp_file"
+    # Add the line [include plr.cfg] at the beginning of the file
+    echo "[include plr.cfg]" > "$temp_file"
+    cat $USER_HOME/printer_data/config/printer.cfg >> "$temp_file"
 
-      # Replace the original file with the temporary file
-      mv "$temp_file" $USER_HOME/printer_data/config/printer.cfg
+    # Replace the original file with the temporary file
+    mv "$temp_file" $USER_HOME/printer_data/config/printer.cfg
 
-      # Check if the string was added successfully
-      if grep -q '[include plr.cfg]' $USER_HOME/printer_data/config/printer.cfg; then
-          echo "The string [include plr.cfg] was successfully added."
-      else
-          echo "Error: the string [include plr.cfg] was not added."
-      fi
-  fi
+    # Check if the string was added successfully
+    if grep -q \'[include plr.cfg]\'' $USER_HOME/printer_data/config/printer.cfg; then
+        echo "The string [include plr.cfg] was successfully added."
+    else
+        echo "Error: the string [include plr.cfg] was not added."
+    fi
+fi
 
   # Check if the variables.cfg file exists
   if [ ! -f $USER_HOME/printer_data/config/variables.cfg ]; then
@@ -139,10 +129,10 @@ else
   echo "Creating a new update_plr.cfg file with cat EOF..."
   cat > $USER_HOME/printer_data/config/update_plr.cfg << EOF
 # plr-klipper update_manager entry
-[update_manager YUMI_PLR]
+[update_manager Klipper_PLR]
 type: git_repo
-path: ~/YUMI_PLR
-origin: https://github.com/Yumi-Lab/YUMI_PLR.git
+path: $HOME/Klipper_PLR
+origin: https://github.com/Pipow-fmf/Klipper_PLR.git
 primary_branch: main
 install_script: install.sh
 is_system_service: False
@@ -150,24 +140,25 @@ is_system_service: False
 EOF
 
 # Vérifier si le script est exécuté avec sudo
-echo "Vérification de l'exécution avec sudo..."
+echo "Check if the script is executed using sudo..."
 if [ -n "$SUDO_USER" ]; then
-    echo "Le script est exécuté avec sudo."
+    echo "The script is executed using sudo."
     # La variable SUDO_USER est définie, donc le script est exécuté avec sudo
     REAL_USER="$SUDO_USER"
     echo "Utilisateur réel (SUDO_USER) : $REAL_USER"
     
-    echo "Répertoire personnel de l'utilisateur réel (USER_HOME) : $USER_HOME"
+    echo "Personal path of real users (USER_HOME) : $USER_HOME"
     
-    echo "Exécution de la commande chown pour $USER_HOME/printer_data/config/ avec $OWNER:$OWNER"
-    # Exécuter la commande chown avec les droits de l'utilisateur spécifique (pi:pi pour runner, sinon SUDO_USER)
+    echo "Execute the chown command of $USER_HOME/printer_data/config/ avec $OWNER:$OWNER"
+    # Exécuter la commande chown avec les droits de l\'utilisateur spécifique (pi:pi pour runner, sinon SUDO_USER)
     chown -R "$OWNER":"$OWNER" "$USER_HOME/printer_data/config/"
-    echo "Commande chown exécutée."
+    echo "Execute the chown command."
 else
-    echo "Ce script n'est pas executé en sudo."
+    echo "This script is not executed using sudo."
 fi
 
-  # Print a message to the user
-  echo "Installation complete"
+    # Print a message to the user
+    echo "Installation complete"
 fi
 #end of script
+
